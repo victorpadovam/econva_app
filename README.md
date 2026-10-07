@@ -2,11 +2,11 @@
 
 Aplicativo desenvolvido em Flutter utilizando **Clean Architecture**, **GetX** para gerenciamento de estado/injeção de dependências.
 
-## Versao Do Flutter
+## Versão do Flutter
 
-├─────────┼─────────┼─────────────────┼──────────────┼──────────────┼────────┼───────┤
-│ 3.27.1  │ stable  │ 3.27.1          │ 3.6.0        │ Dec 16, 2024 │        │ ●     │
-├─────────┼─────────┼─────────────────┼──────────────┼──────────────┼────────┼───────┤
+| Versão | Canal  | Versão Flutter | Dart  | Data         |
+|--------|--------|----------------|-------|--------------|
+| 3.27.1 | stable | 3.27.1         | 3.6.0 | Dec 16, 2024 |
 
 ## Tecnologias
 
