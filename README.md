@@ -15,12 +15,12 @@ Aplicativo desenvolvido em Flutter utilizando **Clean Architecture**, **GetX** p
 - GetX
 - Clean Architecture
 - Material Design
-📁 Estrutura do Projeto
 
 ## Arquitetura
 
 O projeto utiliza uma estrutura baseada em Clean Architecture, separando responsabilidades entre as camadas.
 
+```
 lib/
 │
 ├── core/
@@ -51,3 +51,4 @@ lib/
 │
 ├── app.dart
 └── main.dart
+```
