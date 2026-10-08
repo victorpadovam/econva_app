@@ -2,11 +2,11 @@
 
 Aplicativo desenvolvido em Flutter utilizando **Clean Architecture**, **GetX** para gerenciamento de estado/injeção de dependências.
 
-## Versão do Flutter
+## Versao Do Flutter
 
-| Versão | Canal  | Versão Flutter | Dart  | Data         |
-|--------|--------|----------------|-------|--------------|
-| 3.27.1 | stable | 3.27.1         | 3.6.0 | Dec 16, 2024 |
+├─────────┼─────────┼─────────────────┼──────────────┼──────────────┼────────┼───────┤
+│ 3.27.1  │ stable  │ 3.27.1          │ 3.6.0        │ Dec 16, 2024 │        │ ●     │
+├─────────┼─────────┼─────────────────┼──────────────┼──────────────┼────────┼───────┤
 
 ## Tecnologias
 
@@ -15,12 +15,12 @@ Aplicativo desenvolvido em Flutter utilizando **Clean Architecture**, **GetX** p
 - GetX
 - Clean Architecture
 - Material Design
+📁 Estrutura do Projeto
 
 ## Arquitetura
 
 O projeto utiliza uma estrutura baseada em Clean Architecture, separando responsabilidades entre as camadas.
 
-```
 lib/
 │
 ├── core/
@@ -51,4 +51,3 @@ lib/
 │
 ├── app.dart
 └── main.dart
-```

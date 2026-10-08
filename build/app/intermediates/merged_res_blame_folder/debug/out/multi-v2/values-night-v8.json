@@ -6,20 +6,20 @@
                 {
                     "source": "/Users/victorpadovam/Documentos/Desenvolvimento/Projetos/econva_app/android/app/src/main/res/values-night/styles.xml",
                     "from": {
-                        "startLines": "3,14",
+                        "startLines": "3,18",
                         "startColumns": "4,4",
-                        "startOffsets": "172,817",
-                        "endLines": "7,16",
+                        "startOffsets": "172,1086",
+                        "endLines": "11,20",
                         "endColumns": "12,12",
-                        "endOffsets": "475,981"
+                        "endOffsets": "744,1250"
                     },
                     "to": {
-                        "startLines": "2,6",
+                        "startLines": "2,10",
                         "startColumns": "4,4",
-                        "startOffsets": "55,236",
-                        "endLines": "5,8",
+                        "startOffsets": "55,505",
+                        "endLines": "9,12",
                         "endColumns": "12,12",
-                        "endOffsets": "231,400"
+                        "endOffsets": "500,669"
                     }
                 }
             ]
