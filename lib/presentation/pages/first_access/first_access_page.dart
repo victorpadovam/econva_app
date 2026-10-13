@@ -14,7 +14,7 @@ class FirstAccessPage extends StatelessWidget {
   final VoidCallback? onHaveAccount;
 
   void goToCreateAccount() => Get.toNamed(AppRoutes.createAccount);
-
+  void goToLogin() => Get.offNamed(AppRoutes.login);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +88,7 @@ class FirstAccessPage extends StatelessWidget {
                           Center(
                             child: SecondaryButton(
                               label: 'Já tenho conta',
-                              onPressed: onHaveAccount ?? () {},
+                              onPressed: goToLogin,
                             ),
                           ),
                           SizedBox(height: h * 0.03),

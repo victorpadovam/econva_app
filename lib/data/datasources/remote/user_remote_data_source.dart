@@ -9,7 +9,6 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
   @override
   Future<List<UserModel>> getUsers() async {
-    // TODO: Replace this mock with your API call.
     await Future<void>.delayed(const Duration(milliseconds: 500));
 
     return const [

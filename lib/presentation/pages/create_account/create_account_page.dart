@@ -1,7 +1,9 @@
+import 'package:econva_app/core/routes/app_routes.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/background_decoration.dart';
 import '../../widgets/econva_logo.dart';
+import 'package:get/get.dart';
 
 /// Paleta da identidade Econva (extraída da tela "Seu dinheiro. Sob controle.")
 class _C {
@@ -49,16 +51,35 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   late final TapGestureRecognizer _termsTap;
   late final TapGestureRecognizer _privacyTap;
 
+  bool _ready = false;
+  bool _listening = false;
+  Animation<double>? _routeAnim;
+
   @override
-  void initState() {
-    super.initState();
-    _termsTap = TapGestureRecognizer()..onTap = () => widget.onTerms?.call();
-    _privacyTap = TapGestureRecognizer()
-      ..onTap = () => widget.onPrivacy?.call();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_ready || _listening) return;
+
+    final anim = ModalRoute.of(context)?.animation;
+    if (anim == null || anim.isCompleted) {
+      _ready = true;
+    } else {
+      _routeAnim = anim..addStatusListener(_onRouteStatus);
+      _listening = true;
+    }
+  }
+
+  void _onRouteStatus(AnimationStatus status) {
+    if (status == AnimationStatus.completed && mounted) {
+      _routeAnim?.removeStatusListener(_onRouteStatus);
+      _listening = false;
+      setState(() => _ready = true);
+    }
   }
 
   @override
   void dispose() {
+    _routeAnim?.removeStatusListener(_onRouteStatus);
     _email.dispose();
     _password.dispose();
     _confirm.dispose();
@@ -68,6 +89,14 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
     _termsTap.dispose();
     _privacyTap.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _termsTap = TapGestureRecognizer()..onTap = () => widget.onTerms?.call();
+    _privacyTap = TapGestureRecognizer()
+      ..onTap = () => widget.onPrivacy?.call();
   }
 
   String? get _emailError {
@@ -99,94 +128,116 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _C.bg,
-      body: BackgroundDecoration(
-        child: SafeArea(
-          child: LayoutBuilder(
-            builder: (context, c) {
-              final w = c.maxWidth;
-              final h = c.maxHeight;
-              final hPad = w * 0.063;
+      body: RepaintBoundary(
+        child: BackgroundDecoration(
+          child: SafeArea(
+            child: LayoutBuilder(
+              builder: (context, c) {
+                final w = c.maxWidth;
+                final h = c.maxHeight;
+                final hPad = w * 0.063;
 
-              return GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () => FocusScope.of(context).unfocus(),
-                child: SingleChildScrollView(
-                  keyboardDismissBehavior:
-                      ScrollViewKeyboardDismissBehavior.onDrag,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: h),
-                    child: IntrinsicHeight(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: hPad),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: h * 0.02),
-                            _buildHeader(w),
-                            SizedBox(height: h * 0.035),
-                            _buildTitle(),
-                            SizedBox(height: h * 0.03),
-                            const _SectionDivider(label: 'SEU ACESSO'),
-                            SizedBox(height: h * 0.022),
-                            _AuthField(
-                              label: 'E-mail',
-                              hint: 'seu@email.com',
-                              icon: Icons.mail_outline_rounded,
-                              controller: _email,
-                              focusNode: _emailFocus,
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.next,
-                              errorText: _emailError,
-                              onSubmitted: (_) => _passFocus.requestFocus(),
-                            ),
-                            SizedBox(height: h * 0.022),
-                            _AuthField(
-                              label: 'Senha',
-                              hint: 'Crie uma senha',
-                              icon: Icons.lock_outline_rounded,
-                              controller: _password,
-                              focusNode: _passFocus,
-                              obscure: _hidePass,
-                              onToggleObscure: () =>
-                                  setState(() => _hidePass = !_hidePass),
-                              textInputAction: TextInputAction.next,
-                              helperText: 'Mínimo de 6 caracteres.',
-                              errorText: _passError,
-                              onSubmitted: (_) => _confirmFocus.requestFocus(),
-                            ),
-                            SizedBox(height: h * 0.022),
-                            _AuthField(
-                              label: 'Confirmar senha',
-                              hint: 'Digite a senha novamente',
-                              icon: Icons.shield_outlined,
-                              controller: _confirm,
-                              focusNode: _confirmFocus,
-                              obscure: _hideConfirm,
-                              onToggleObscure: () =>
-                                  setState(() => _hideConfirm = !_hideConfirm),
-                              textInputAction: TextInputAction.done,
-                              errorText: _confirmError,
-                              onSubmitted: (_) => _submit(),
-                            ),
-                            const Spacer(),
-                            SizedBox(height: h * 0.025),
-                            _buildTerms(),
-                            SizedBox(height: h * 0.022),
-                            _GradientButton(
-                              label: 'Criar conta',
-                              onPressed: _submit,
-                            ),
-                            SizedBox(height: h * 0.025),
-                            _buildLoginLink(),
-                            SizedBox(height: h * 0.03),
-                          ],
+                return GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: () => FocusScope.of(context).unfocus(),
+                  child: SingleChildScrollView(
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minHeight: h),
+                      child: IntrinsicHeight(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: hPad),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: h * 0.02),
+                              _buildHeader(w), // Hero sempre visível
+                              Expanded(
+                                child: IgnorePointer(
+                                  ignoring: !_ready,
+                                  child: AnimatedOpacity(
+                                    opacity: _ready ? 1 : 0,
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.easeOut,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: h * 0.035),
+                                        _buildTitle(),
+                                        SizedBox(height: h * 0.03),
+                                        const _SectionDivider(
+                                            label: 'SEU ACESSO'),
+                                        SizedBox(height: h * 0.022),
+                                        _AuthField(
+                                          label: 'E-mail',
+                                          hint: 'seu@email.com',
+                                          icon: Icons.mail_outline_rounded,
+                                          controller: _email,
+                                          focusNode: _emailFocus,
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          textInputAction: TextInputAction.next,
+                                          errorText: _emailError,
+                                          onSubmitted: (_) =>
+                                              _passFocus.requestFocus(),
+                                        ),
+                                        SizedBox(height: h * 0.022),
+                                        _AuthField(
+                                          label: 'Senha',
+                                          hint: 'Crie uma senha',
+                                          icon: Icons.lock_outline_rounded,
+                                          controller: _password,
+                                          focusNode: _passFocus,
+                                          obscure: _hidePass,
+                                          onToggleObscure: () => setState(
+                                              () => _hidePass = !_hidePass),
+                                          textInputAction: TextInputAction.next,
+                                          helperText: 'Mínimo de 6 caracteres.',
+                                          errorText: _passError,
+                                          onSubmitted: (_) =>
+                                              _confirmFocus.requestFocus(),
+                                        ),
+                                        SizedBox(height: h * 0.022),
+                                        _AuthField(
+                                          label: 'Confirmar senha',
+                                          hint: 'Digite a senha novamente',
+                                          icon: Icons.shield_outlined,
+                                          controller: _confirm,
+                                          focusNode: _confirmFocus,
+                                          obscure: _hideConfirm,
+                                          onToggleObscure: () => setState(() =>
+                                              _hideConfirm = !_hideConfirm),
+                                          textInputAction: TextInputAction.done,
+                                          errorText: _confirmError,
+                                          onSubmitted: (_) => _submit(),
+                                        ),
+                                        const Spacer(),
+                                        SizedBox(height: h * 0.025),
+                                        _buildTerms(),
+                                        SizedBox(height: h * 0.022),
+                                        _GradientButton(
+                                          label: 'Criar conta',
+                                          onPressed: _submit,
+                                        ),
+                                        SizedBox(height: h * 0.025),
+                                        _buildLoginLink(),
+                                        SizedBox(height: h * 0.03),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -310,7 +361,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   Widget _buildLoginLink() {
     return Center(
       child: GestureDetector(
-        onTap: widget.onHaveAccount,
+        onTap: widget.onHaveAccount ??
+            () => Get.offAllNamed(AppRoutes.firstAccess),
         behavior: HitTestBehavior.opaque,
         child: const Padding(
           padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
